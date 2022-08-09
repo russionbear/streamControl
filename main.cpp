@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QtDebug>
 #include <QThread>
+#include <QOpenGLWidget>
 
 
 void testUnpackage(){
@@ -26,6 +27,7 @@ void testUnpackage(){
     aresample.Open(unpackage.AudioPar);
 
     qDebug() << "audio device open:" << audioDevice->Open();
+    videoDevice->Init(320, 240);
 
     int64_t count = 0;
 //    unpackage.SeekByDouble(0.9);
@@ -52,7 +54,7 @@ void testUnpackage(){
                 if (size <= 0)break;
                 if (audioDevice->GetFree() < size)
                 {
-                    qDebug() << "sdfsdf";
+//                    qDebug() << "sdfsdf";
                     QThread::msleep(1);
                     continue;
                 }
@@ -63,30 +65,32 @@ void testUnpackage(){
 
         }else{
             qDebug() << "v" << vdecode.Send(pkt);
-            vdecode.Recv();
-//            while(true){
+            frame = vdecode.Recv();
+//            if(!frame)
+//                continue;
+            videoDevice->Repaint(frame);
+            QThread::msleep(40);
+
+//            while (true) {
 //                frame = vdecode.Recv();
-//                QThread::msleep(1);
-//                if(frame){
-//                    break;
+//                if(!frame){
+//                    QThread::msleep(1);
+//                    continue;
 //                }
+//                videoDevice->Repaint(frame);
+//                break;
 //            }
         }
         count ++;
     }
 
-//    qDebug() << count;
-//    unpackage.Open("/home/king/workspace/opencv/resource/1.map4");
-//    unpackage.SeekByDouble(0.9);
-//    while (true) {
-//        AVPacket *pkt = unpackage.Read();
-//        if(!pkt)
-//            break;
-//        count ++;
-//    }
-//    qDebug() << count;
-
 }
+
+class TestThread: public QThread{
+    void run(){
+        testUnpackage();
+    }
+};
 
 int main(int argc, char *argv[])
 {
@@ -96,7 +100,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    testUnpackage();
+    TestThread test;
+    test.start();
+//    testUnpackage();
 //    qDebug() << XVideoDevice::getInstance();
     return a.exec();
 }

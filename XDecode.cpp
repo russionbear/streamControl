@@ -107,7 +107,7 @@ AVFrame *XDecode::Recv()
 		av_frame_free(&frame);
 		return NULL;
 	}
-	// cout << "["<<frame->linesize[0] << "] " << flush;
+     qDebug() << "["<<frame->linesize[0] << "] ";
 	return frame;
 }
 

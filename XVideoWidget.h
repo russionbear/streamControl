@@ -8,6 +8,7 @@
 
 #include "XPlayDevice.h"
 
+
 struct AVFrame;
 class XVideoWidget : public QOpenGLWidget, protected QOpenGLFunctions,public XVideoDevice
 {
@@ -20,14 +21,16 @@ public:
     void Init(int width, int height);
     void Repaint(AVFrame *frame);
 
+    void paintEvent(QPaintEvent *e) override;
+
 protected:
     std::mutex mux;
     QGLShaderProgram program;
     GLuint unis[3] = { 0 };
     GLuint texs[3] = { 0 };
     unsigned char *datas[3] = { 0 };
-    int width = 240;
-    int height = 128;
+    int width = 320;
+    int height = 240;
 
     void initializeGL();
 

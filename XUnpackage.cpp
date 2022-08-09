@@ -27,10 +27,18 @@ XUnpackage::XUnpackage()
         isFirst = false;
     }
     dmux.unlock();
+    XUnpackage::getInstance(this);
 }
 
 XUnpackage::~XUnpackage()
 {
+}
+
+XUnpackage* XUnpackage::getInstance(XUnpackage *upk){
+    static XUnpackage *instance = NULL;
+    if(upk!=NULL)
+        instance = upk;
+    return upk;
 }
 
 

@@ -23,6 +23,7 @@ public:
     XUnpackage();
     ~XUnpackage();
 
+    static XUnpackage* getInstance(XUnpackage* upk=NULL);
     virtual bool Open(const char *url);
     virtual void Close();
 
